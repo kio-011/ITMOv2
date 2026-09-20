@@ -1,17 +1,17 @@
 # Журнал экспериментов Практики 2
 
-- Выбранный слабый артефакт Практики 1:
-- Что в нём нужно улучшить:
-- Как поймём, что изменение полезно:
+- Выбранный слабый артефакт Практики 1: practices/practice_01/tests_load.md (план нагрузочного тестирования)
+- Что в нём нужно улучшить: воспроизводимость (инструмент/режим/ENV/SEED), однозначные Pass/Fail, конкретика evidence (метрики/дашборды/трассы), фиксация допущений и условия включения нагрузки
+- Как поймём, что изменение полезно: план можно повторить по документу; Makefile Практики 2 проходит; есть финальный артефакт с проверяемыми критериями и ссылками на evidence
 
 | Техника | Файл эксперимента | Изменённый файл Практики 1 | Конкретное изменение | Проверка | Что отклонили |
 |---|---|---|---|---|---|
-| Few-shot | [`few_shot/experiment.md`](few_shot/experiment.md) |  |  |  |  |
-| R.C.T.F. | [`rctf/experiment.md`](rctf/experiment.md) |  |  |  |  |
-| Chain of Verification | [`chain_of_verification/experiment.md`](chain_of_verification/experiment.md) |  |  |  |  |
-| Tree of Thoughts | [`tree_of_thoughts/experiment.md`](tree_of_thoughts/experiment.md) |  |  |  |  |
-| RAG | [`rag/experiment.md`](rag/experiment.md) |  |  |  |  |
-| ReAct | [`react/experiment.md`](react/experiment.md) |  |  |  |  |
+| Few-shot | [`few_shot/experiment.md`](few_shot/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_few_shot.md` | Дополнены разделы «Профиль трафика», «Инструменты и запуск», «Pass/Fail Gate», «Observability и evidence», «Инъекции», «Допущения и источники»; таблица сценариев и «Условие включения» сохранены | Пороги сверены с исходной таблицей, не изменялись; новые значения помечены «допущение + TODO»; артефакт создан и непустой | Выдуманные источники; изменение исходных порогов; запуск против боевой среды |
+| R.C.T.F. | [`rctf/experiment.md`](rctf/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_rctf.md` | Переработан план в 12 разделов с бинарными Pass/Fail-таблицами (Параметр/Значение/Статус/Источник), конкретными метриками/дашбордами, режимом нагрузки, SEED и окнами измерений | Внутренний аудит структуры и соответствия Практике 2; каждое число со статусом «подтверждено/допущение + TODO»; артефакт непустой | Изменение исходных чисел без источника; любые новые цифры без пометки допущения |
+| Chain of Verification | [`chain_of_verification/experiment.md`](chain_of_verification/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_chain_of_verification.md` | Оформлен воспроизводимый план (разделы 1–6), уточнены Pass/Fail и evidence, помечены допущения | Проверка по CoV: источники/допущения размечены; Makefile Практики 2 проходит; артефакт создан и непустой | Отклонено: изменение SLO без источников; «придуманные» внешние данные; правки P1 без договорённости |
+| Tree of Thoughts | [`tree_of_thoughts/experiment.md`](tree_of_thoughts/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_tree_of_thoughts.md` | По 7 компонентам (инструмент, профиль, модель данных, наблюдаемость, Pass/Fail, инъекции, реплицируемость) сгенерированы 3+ альтернативы, оценены по единым критериям (1–5), выбрана комбинация: k6 + arrival-rate, summary+скриншоты, локальный мок LLM | Альтернативы описаны внешне с таблицами оценок; выбор обоснован суммой баллов; числа со статусом «подтверждено/допущение»; артефакт непустой | Только VUs без arrival-rate; текстовые/сравнительные Pass/Fail; только консольные логи без summary |
+| RAG | [`rag/experiment.md`](rag/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_rag.md` | Составлена RAG-версия строго по локальным источникам: сценарии привязаны к API-1 (413), REL-1 (timeout), ограничения SEC-1/OBS-1, эндпоинты из TRAINING_PR.diff; все числа без источника помечены «[допущение — TBD]» | Каждый факт снабжён Source+Citation+Quote; эндпоинты сверены с `app/api.py:35-37,40-42`; вызов LLM — `app/review_service.py:19-22` | Любые числовые SLO (p95/p99, 4xx/5xx), RPS/VUs/длительности и метод инъекций — до появления источников в problem.md/adr.md |
+| ReAct | [`react/experiment.md`](react/experiment.md) | `practices/practice_01/tests_load.md` (без изменений); добавлен артефакт `practices/practice_02/artifacts/load/test_load_react.md` | Внесён цельный блок правок: профиль трафика, инструмент/запуск, Pass/Fail, observability, инъекции, реплицируемость; «подтверждено/допущение+TODO» | Проверка: ссылки на CASE.md и TRAINING_PR.diff; артефакты созданы и непустые | Отклонено: Locust (в этом шаге), жёсткие SLO без источника, внешние облачные сервисы |
 
 ## Независимое ревью
 
