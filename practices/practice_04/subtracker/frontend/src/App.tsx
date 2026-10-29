@@ -3,6 +3,7 @@ import { AuthProvider } from './auth/AuthContext'
 import { RedirectIfAuthed, RequireAuth } from './auth/RequireAuth'
 import { AppLayout } from './components/AppLayout'
 import { I18nProvider } from './i18n'
+import Import from './pages/Import'
 import Login from './pages/Login'
 import Overview from './pages/Overview'
 import Subscriptions from './pages/Subscriptions'
@@ -18,6 +19,7 @@ export function AppRoutes() {
         <Route element={<AppLayout />}>
           <Route index element={<Overview />} />
           <Route path="subscriptions" element={<Subscriptions />} />
+          <Route path="import" element={<Import />} />
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

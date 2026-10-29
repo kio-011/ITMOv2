@@ -1,6 +1,9 @@
 import { request } from './client'
 import type {
   Breakdown,
+  ConfirmItemInput,
+  ConfirmResult,
+  StatementImport,
   ListParams,
   Subscription,
   SubscriptionInput,
@@ -51,4 +54,23 @@ export const api = {
     request<Subscription>(`/api/subscriptions/${id}`, { method: 'PATCH', body: patch }),
   deleteSubscription: (id: number) =>
     request<void>(`/api/subscriptions/${id}`, { method: 'DELETE' }),
+
+  uploadStatement: (file: File, signal?: AbortSignal) => {
+    const form = new FormData()
+    form.append('file', file, file.name)
+    return request<StatementImport>('/api/imports/statement', {
+      method: 'POST',
+      formData: form,
+      signal,
+    })
+  },
+  readStatementImport: (importId: string, signal?: AbortSignal) =>
+    request<StatementImport>(`/api/imports/statement/${importId}`, { signal }),
+  confirmStatementImport: (importId: string, idempotencyKey: string, items: ConfirmItemInput[]) =>
+    request<ConfirmResult>(`/api/imports/statement/${importId}/confirm`, {
+      method: 'POST',
+      body: { idempotencyKey, items },
+    }),
+  discardStatementImport: (importId: string) =>
+    request<void>(`/api/imports/statement/${importId}`, { method: 'DELETE' }),
 }
