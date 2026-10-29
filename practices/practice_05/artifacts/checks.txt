@@ -1,0 +1,13 @@
+===== BACKEND =====
+........................................................................ [ 70%]
+.............................................................            [100%]
+203 passed, 2 skipped in 6.70s
+--- ruff check
+All checks passed!
+--- ruff format
+57 files already formatted
+
+===== FRONTEND =====
+ Test Files  6 passed (6)
+      Tests  70 passed (70)
+tsc: ok
