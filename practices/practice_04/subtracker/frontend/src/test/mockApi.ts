@@ -43,6 +43,8 @@ export interface MockState {
   loginStatus: number
   registerStatus: number
   createResponse: { status: number; body: unknown } | null
+  importResponse: { status: number; body: unknown } | null
+  confirmResponse: { status: number; body: unknown } | null
 }
 
 export function createState(over: Partial<MockState> = {}): MockState {
@@ -58,6 +60,8 @@ export function createState(over: Partial<MockState> = {}): MockState {
     loginStatus: 200,
     registerStatus: 201,
     createResponse: null,
+    importResponse: null,
+    confirmResponse: null,
     ...over,
   }
 }
@@ -70,10 +74,19 @@ export function installMockApi(state: MockState) {
   const handler = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
     const url = new URL(String(input))
     const method = init?.method ?? 'GET'
-    const body = init?.body ? JSON.parse(String(init.body)) : undefined
+    const isForm = typeof FormData !== 'undefined' && init?.body instanceof FormData
+    const body = init?.body && !isForm ? JSON.parse(String(init.body)) : undefined
     state.calls.push({ method, path: url.pathname, query: url.searchParams, body })
     const active = state.subs.filter((s) => s.is_active)
 
+    if (url.pathname.startsWith('/api/imports/statement')) {
+      if (method === 'DELETE') return new Response(null, { status: 204 })
+      const target = url.pathname.endsWith('/confirm')
+        ? state.confirmResponse
+        : state.importResponse
+      if (!target) return json(404, { detail: { code: 'import.not_found', params: {} } })
+      return json(target.status, target.body)
+    }
     if (url.pathname === '/api/auth/login') {
       return state.loginStatus === 200
         ? json(200, { access_token: 'a', refresh_token: 'r', token_type: 'bearer' })

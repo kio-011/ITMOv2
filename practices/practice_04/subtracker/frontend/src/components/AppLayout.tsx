@@ -70,6 +70,7 @@ function Shell() {
           <nav aria-label={t.nav.main} className="flex gap-1 rounded-full border border-line bg-surface p-1">
             <NavLink to="/" end className={tabClass}>{t.nav.overview}</NavLink>
             <NavLink to="/subscriptions" className={tabClass}>{t.nav.subscriptions}</NavLink>
+            <NavLink to="/import" className={tabClass}>{t.import.entry}</NavLink>
             <CalendarTab />
           </nav>
           <div className="flex items-center gap-3">

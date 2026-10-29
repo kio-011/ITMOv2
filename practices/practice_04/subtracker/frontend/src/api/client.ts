@@ -23,6 +23,8 @@ interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
   query?: Record<string, string | number | boolean | undefined>
   body?: unknown
+  // Sent as-is: multipart must not go through snake_case conversion.
+  formData?: FormData
   // false for login, register and refresh: they must not trigger the refresh flow.
   auth?: boolean
   signal?: AbortSignal
@@ -55,7 +57,7 @@ function refreshAccessToken(): Promise<boolean> {
 }
 
 async function send<T>(path: string, options: RequestOptions): Promise<T> {
-  const { method = 'GET', query, body, auth = true, signal } = options
+  const { method = 'GET', query, body, formData, auth = true, signal } = options
   const url = new URL(path, API_URL)
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value !== undefined && value !== '') url.searchParams.set(key, String(value))
@@ -72,7 +74,7 @@ async function send<T>(path: string, options: RequestOptions): Promise<T> {
     response = await fetch(url, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(snakeizeKeys(body)),
+      body: formData ?? (body === undefined ? undefined : JSON.stringify(snakeizeKeys(body))),
       signal,
     })
   } catch (error) {
