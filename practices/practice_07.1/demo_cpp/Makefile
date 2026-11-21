@@ -4,7 +4,11 @@ CXXFLAGS ?= -std=c++17 -Wall -Wextra -O2
 bank: main.cpp bank.cpp bank.h
 	$(CXX) $(CXXFLAGS) -o bank main.cpp bank.cpp
 
-clean:
-	rm -f bank audit.log
+test: tests.cpp bank.cpp bank.h
+	$(CXX) $(CXXFLAGS) -o tests tests.cpp bank.cpp
+	./tests
 
-.PHONY: clean
+clean:
+	rm -f bank tests audit.log
+
+.PHONY: test clean
