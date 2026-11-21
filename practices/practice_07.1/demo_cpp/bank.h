@@ -23,6 +23,10 @@ public:
     bool withdraw(int id, long long cents);
     bool transfer(int from, int to, long long cents);
 
+    // Меняет лимит овердрафта. Лимит не может быть отрицательным и не может
+    // быть меньше текущего долга по счёту.
+    bool set_overdraft(int id, long long cents);
+
     long long total_cents() const;
     void print_report() const;
 

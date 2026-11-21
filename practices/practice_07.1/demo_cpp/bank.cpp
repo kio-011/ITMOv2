@@ -88,6 +88,16 @@ bool Bank::transfer(int from, int to, long long cents) {
     return true;
 }
 
+bool Bank::set_overdraft(int id, long long cents) {
+    if (cents < 0) return false;
+    Account* a = find(id);
+    if (!a) return false;
+    if (a->balance_cents < -cents) return false;  // счёт уже глубже нового лимита
+    a->overdraft_limit_cents = cents;
+    log_event("overdraft " + std::to_string(cents) + " for " + std::to_string(id));
+    return true;
+}
+
 long long Bank::total_cents() const {
     long long total = 0;
     for (const auto& a : accounts_) total += a.balance_cents;

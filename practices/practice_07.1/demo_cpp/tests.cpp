@@ -36,9 +36,20 @@ static void test_withdraw_limits() {
     bank.deposit(a->id, 1000);
     CHECK(bank.withdraw(a->id, 1000));   // ровно в ноль можно
     CHECK(!bank.withdraw(a->id, 1));     // глубже лимита нельзя
-    a->overdraft_limit_cents = 500;
+    CHECK(bank.set_overdraft(a->id, 500));
     CHECK(bank.withdraw(a->id, 500));    // ровно до границы овердрафта
     CHECK(!bank.withdraw(a->id, 1));
+}
+
+static void test_set_overdraft_rules() {
+    Bank bank;
+    int id = bank.open("a")->id;
+    CHECK(!bank.set_overdraft(id, -1));      // отрицательный лимит нельзя
+    CHECK(!bank.set_overdraft(999, 100));    // нет такого счёта
+    CHECK(bank.set_overdraft(id, 1000));
+    CHECK(bank.withdraw(id, 800));           // баланс -800
+    CHECK(!bank.set_overdraft(id, 500));     // долг больше нового лимита
+    CHECK(bank.set_overdraft(id, 800));      // ровно по долгу можно
 }
 
 static void test_transfer_is_atomic() {
@@ -60,6 +71,7 @@ int main() {
     test_pointers_stay_valid();
     test_rejects_bad_amounts();
     test_withdraw_limits();
+    test_set_overdraft_rules();
     test_transfer_is_atomic();
     if (failures == 0) std::cout << "All tests passed\n";
     return failures == 0 ? 0 : 1;
